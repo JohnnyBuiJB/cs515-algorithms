@@ -209,13 +209,74 @@ Assume that we know the minimum number of insertions k needed to transform A to 
 Find the length (number of edges) of the longest path in a binary tree.
 \end{problem}
 
+\textbf{Observation 1:} A binary tree T includes two subtrees L and R, and the root node. The longest path of T, LP(T) can be a path within L, a path within R (2), or a combination of the longest path from the root node to some node in L and the longest path from the root node to some node in R (3). The longest path from some node in L to the root node is the depth of L + 1, and the same applies to R.
+
+\textbf{Observation 2:} The depth of tree T, D(T), is the largest of the depth of the left subtree and the depth of the right subtree.
+
 \textbf{Recursive Formulation}
+\normalsize{
+\[
+    D(T)=
+    \begin{centercases}
+        -1   & T = \emptyset \\
+        0    & T.L = \emptyset \land T.R = \emptyset \\
+        1 + max(D(L), D(R)) & otherwise
+    \end{centercases}
+\]
+}
+
+\normalsize{
+\[
+    LP(T)=
+    \begin{centercases}
+        -1   & T = \emptyset \\
+        0    & T.L = \emptyset \land T.R = \emptyset \\
+        max(LP(L), LP(R), D(L) + D(R) + 2) & otherwise
+    \end{centercases}
+\]
+}
 
 \textbf{Proof/Explanation}
 
+We will prove that there not exist a path in T that is longer than LP(L), LP(R), and D(L) + D(R) + 2, using proof by contradiction. Assume that there exists a longer path $(x,y)$ with $x,y \in L \cup R \cup r$ where $r$ is the root node. If $x,y \in L$, then it contradicts with the assumption that LP(L) is the longest path in L, which shows that such path does not exist. The same argument can be applied to path within the right tree. Lastly, if $x \in L$ and $y \in R$ then it has to go through r. We can break the path into two pieces, $(x,r)$ and $(r,y)$ so that $|(x,y)| = |(x,r)| + |(r,y)|$, which can not be greater than D(L) + D(R). Thus, such a path does not exist.
+
+\newpage
 \textbf{Pseudocode}
+For this problem, a recursive implementation seems to be more efficient, readable, and easier to implement compared to an iterative implementation.
+
+\begin{algorithm}
+\caption{$D(T)$}\label{alg:D}
+\begin{algorithmic}
+    \If{$T == \emptyset$}
+        \Return -1
+    \EndIf
+
+    \If{$T.L == \emptyset \land T.R == \emptyset$}
+        \Return 0
+    \EndIf
+
+    \Return $1 + max(D(T.L), D(T.R))$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{$LP(T)$}\label{alg:LP}
+\begin{algorithmic}
+    \If{$T == \emptyset$}
+        \Return -1
+    \EndIf
+
+    \If{$T.L == \emptyset \land T.R == \emptyset$}
+        \Return 0
+    \EndIf
+
+    \Return $max(LP(T.L), LP(T.R), D(T.L) + D(T.R) + 2)$
+\end{algorithmic}
+\end{algorithm}
 
 \textbf{Runing Time Analysis}
+
+The iterative implementation needs to compute LP from the bottom up, that is from the leaves up to the root. The problem is we do not know the leaves in advance so it needs to traverse the trees one more time to find the leaves. For memory, it needs O(n) of memory to keep the results in the worst case that the tree is a full binary tree, which has (n + 1) / 2 leaves. On the other hand, a recursive algorithm only needs to traverse through the tree once because a node depends on exactly its two children nodes. Therefore, it takes O(n) time and O(n) space of stack to store the recursive calls.
 
 %==============================================================================%
 \newpage

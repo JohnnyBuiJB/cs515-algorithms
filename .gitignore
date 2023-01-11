@@ -40,6 +40,8 @@
 *.gz
 *.toc
 *.log
+*.bbl
+*.blg
 
 # vscode
 .vscode
