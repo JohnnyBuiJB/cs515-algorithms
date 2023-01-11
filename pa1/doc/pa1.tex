@@ -52,8 +52,8 @@
 
 \pagestyle{fancyplain}
 \headheight 35pt
-\lhead{IA1 Competition \projnumber}
-\rhead{Oct. 9, 2022}
+\lhead{Practice Assignment \projnumber}
+\rhead{Jan. 19, 2023}
 \lfoot{}
 \cfoot{}
 \rfoot{\small\thepage}
@@ -100,9 +100,13 @@
 \end{titlepage}
 
 %==============================================================================%
-\large{\textbf{Question 1}}\newline
+\begin{problem}{1} 
+Suppose you are given an array A[1..n] of integers, which may be positive, negative, or zero. Describe a linear-time (i.e. O(n)-time) algorithm that finds the largest sum of elements in a contiguous, nonempty subarray A[i..j]. For example, given the array [-6, 12,-7, 0, 14,-7, 5] as input, your algorithm should return the integer 19 (the sum of [12,-7, 0, 14]).
 
-\normalsize{}
+For the sake of analysis, assume that comparing, adding, or multiplying any pair of numbers takes O(1) time.
+
+\end{problem}
+
 \textbf{Recursive Formulation}
 Let $LSA(k)$ denote the function that can find the subarray of $A[k:n]$ with the largest sum of its elements. $LSA$ returns a pair of the sum of the largest subarray and its prefix sum in the aforementioned order. For example, let $A = [-1,2,1]$, $LSA(1) = (3,-1)$, with the two last elements as the largest subarray and the first element as the prefix. 
 
@@ -168,8 +172,42 @@ Observe that $LSA(k)$ only depends on $LSA(k+1)$, we can implement this algorith
 There are n iteration, each of which has constant number of operations, hence the algorithm has $O(n)$ time complexity. Furthermore, the algorithm uses $O(1)$ space.
 %==============================================================================%
 \newpage
-\large{\textbf{Question 2}}\newline
-\normalsize{}
+\begin{problem}{2} 
+String A is a supersequence of string B if string B can be obtained from string A by removing letters. For example, the strings BARNYARDSNACK, YUMMYBANANAS, and BWANWANWA are supersequences of the string BANANA. Give a dynamic program for finding the length of the shortest string that is a supersequence of two input strings A and B.
+\end{problem}
+
+We can create the shortest supersequence of A and B by modifying one of them to make it become a supersequence of the other with the least modifications. To keep the resulted sequence a supersequence of the starting string, only insertions are allowed. The proof will be given in the subsequent section. 
+
+The problem now becomes finding the least number of insertions to turn one string to another. This resembles the Edit Distance problem mentioned in \cite{JeffE19} but simpler because it only allows insertions. Intuitively, starting with a longer string leads to less insertions, but both ways will result an optimal solution.
+
+\textbf{Recursive Formulation}
+
+Let $MI(i,j)$ denote the program that can return the minimum of insertions to transform $A[i:n]$ to a supersequence of $B[j:m]$. 
+
+\normalsize{
+    \[
+        MI(i,j)=
+        \begin{centercases}
+            j   & i = 0 \\
+            0   & j = 0 \\
+            min(MI(i,j+1) + 1, MI(i+1,j+1)) & otherwise
+        \end{centercases}
+        \]
+}
+
+\textbf{Proof/Explanation}
+
+Assume that we know the minimum number of insertions k needed to transform A to a supersequence S of B. S will be also a supersequence of A because we can always remove the inserted letters to transform it back to A. To prove that S is the shortest supersequence of A and B, proof by contradiction is used. Assume that there exists a shorter supersequence R of A and B. We can always transform A to R by only inserting some m letters into A. Because R is shorter than S, m is shorter than k, which contradicts with the assumption that k is the minimum number of insertions needed to transform A to a supersequence of B. Therefore, R does not exist and S is the shortest supersequence of A and B.
+
+\textbf{Pseudocode}
+
+\textbf{Runing Time Analysis}
+
+%==============================================================================%
+\newpage
+\begin{problem}{3} 
+Find the length (number of edges) of the longest path in a binary tree.
+\end{problem}
 
 \textbf{Recursive Formulation}
 
@@ -181,8 +219,9 @@ There are n iteration, each of which has constant number of operations, hence th
 
 %==============================================================================%
 \newpage
-\large{\textbf{Question 3}}\newline
-\normalsize{}
+\begin{problem}{4} 
+Suppose you are given an n x n bitmap, represented by a 2-dimensional array M[1..n, 1..n] of 0s and 1s. A solid block in M is a subarray of the form M[i..i', j..j'] containing only 1s. Describe an algorithm to find the area of the maximum solid block in M in $O(n^3)$ time. If you can do that, try to design a faster algorithm that runs in $O(n^2)$ time.
+\end{problem}
 
 \textbf{Recursive Formulation}
 
@@ -192,18 +231,6 @@ There are n iteration, each of which has constant number of operations, hence th
 
 \textbf{Runing Time Analysis}
 
-%==============================================================================%
-\newpage
-\large{\textbf{Question 4}}\newline
-\normalsize{}
-
-\textbf{Recursive Formulation}
-
-\textbf{Proof/Explanation}
-
-\textbf{Pseudocode}
-
-\textbf{Runing Time Analysis}
-
-
+\bibliographystyle{alpha}
+\bibliography{mybib}
 \end{document}
