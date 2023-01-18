@@ -1,0 +1,187 @@
+\documentclass[12pt,article]{article}
+\usepackage{fullpage}
+\usepackage[top=2cm, bottom=4.5cm, left=2cm, right=2cm]{geometry}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
+\usepackage{lastpage}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage{mathrsfs}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{mdframed}
+\usepackage{changepage}   % for the adjustwidth environment
+\usepackage{forest} 
+\usepackage{tikz}   % For graph
+
+\usepackage{float}  % To inforce inserting images at the right place
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+% For recursive formulation, adapted from https://tex.stackexchange.com/questions/580333/typing-sequences-recursively-in-overleaf
+\usepackage{mathtools}
+\makeatletter
+\newcases{centercases}{\quad}
+  {\hfil$\m@th\displaystyle{##}$\hfil}
+  {$\m@th\displaystyle{##}$\hfil}{\lbrace}{.}
+\makeatother
+
+\newcommand{\Tau}{\mathrm{T}}
+
+
+% For matrix
+\def\horzbar{\text{magic}}
+
+\hypersetup{%
+  colorlinks=true,
+  linkcolor=blue,
+  linkbordercolor={0 0 1}
+}
+
+\setlength{\parindent}{0.0in}
+\setlength{\parskip}{0.05in}
+
+\newcommand\projnumber{1}
+\newcommand\course{CS534}
+\newcommand\OSUID{934370552}
+\newcommand\Email{buivy@oregonstate.edu}
+\newcommand\Name{Vy Bui}
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+
+\pagestyle{fancyplain}
+\headheight 35pt
+\lhead{Practice Assignment \projnumber}
+\rhead{Jan. 19, 2023}
+\lfoot{}
+\cfoot{}
+\rfoot{\small\thepage}
+\headsep 1.5em
+
+\newenvironment{problem}[2][Problem]
+    { \begin{mdframed}[backgroundcolor=gray!20] \textbf{#1 #2} \\}
+    {  \end{mdframed}}
+   
+
+% Make Rightarrow with superscript
+% \makeatletter
+% \newcommand{\xRightarrow}[2][]{\ext@arrow 0359\Rightarrowfill@{#1}{#2}}
+% \makeatother
+
+\begin{document}
+
+\begin{titlepage}
+    \begin{center}
+        \vspace*{4cm}
+
+        \textbf{\Large CS515 - Algorithms \& Data Structures}
+
+        \vspace{0.5cm}
+ 
+        \textbf{\Large Dynamic Programming Notes}
+ 
+        \vspace{1cm}
+
+        Vy Bui - 934370552
+
+        \vspace{2cm}
+
+        Instructor: Professor Glencora Borradaile
+        \vfill
+             
+        \vspace{0.8cm}
+      
+             
+        The School of Electrical Engineering and Computer Science\\
+        Oregon State University\\
+             
+    \end{center}
+\end{titlepage}
+
+%==============================================================================%
+\begin{problem}{1}
+\textbf{Longest Increasing Sequence}: Given an array of integers, find the longest increasing sequence. 
+
+Example 1: $LIS([6,3,9,12,4,7,10,3]) = len([3,4,7,10]) = 4$
+
+Example 2: $LIS([7,8,9,2,3]) = len([7,8,9]) = 3$
+
+\end{problem}
+
+\textbf{Recursive Formulation}
+
+\tiny{
+    \[
+        LIS(k)=
+        \begin{centercases}
+            0               & k < 0 \\
+            1               & k = 0 \\
+            max()                & otherwise \\
+        \end{centercases}
+        \]
+}
+
+\normalsize{}
+
+\textbf{Proof/Explanation}
+
+For simplicity, in this section, let $LSA(k)$ denote the subarray of interest only, but not its prefix. This problem's optimal substructure property can be described as follows. The optimal solution to the problem with $A[k:n]$ can be found based on the optimal solution to the problem with $A[k+1:n]$. In particular, assume that we know the optimal solution to the problem of $A[k+1:n]$, adding $A[k]$ to the problem results in two new candidate largest subarrays. First, $A[k]$ can be combined with $LSA(k+1)$ to create a new solution. Note that this comes with the cost of the sum of the prefix of $LSA(k+1)$ because the new solution has to be contiguous. The second candidate is $A[k]$ itself. $LSA(k)$ has the largest sum among these two new candidates and $LSA(k+1)$. Note that the combination solution is prioritized when a tie happens in order to open up opportunities for further combination.
+
+We can use proof by contradiction to prove this algorithm. Assume that there exists a better solution $LSA'(k)$ that is not one of the three candidates, $A[k]$, the combination, and $LSA(k+1)$. First, because $LSA'(k)$ is not $A[k]$, it must be a subarray of $A[k+1:n]$. This makes $LSA'(1)$ the subarray of the largest sum of $A[k+1:n]$ because $sum(LSA'(k)) > sum(LSA(k+1))$ based on our assumption. However, this contradicts another assumption that $LSA(2)$ is the optimal solution to the problem with $A[2:n]$. The proof completes!
+
+\newpage
+\textbf{Pseudocode}
+
+Observe that $LSA(k)$ only depends on $LSA(k+1)$, we can implement this algorithm iteratively from $LSA(n)$ to $LSA(0)$. The solution is $LSA(0)$.
+
+
+\begin{algorithm}
+\caption{$LSA(A[1:n])$}\label{alg:LSA}
+\begin{algorithmic}
+    \State $last\_prefix\_sum \gets 0$\
+    \State $last\_largest\_sum \gets 0$\
+    \State $k \gets n$\;
+    
+    \While{$k \geq 1$}
+        \State $combined\_sum \gets A[k] + last\_largest\_sum + last\_prefix\_sum$
+
+        \State $max\_largest\_sum \gets max(A[k], last\_largest\_sum, combined\_sum)$\
+
+        \If{$combined\_sum == max\_largest\_sum$}
+            \State $last\_prefix\_sum \gets 0$\
+            \State $last\_largest\_sum \gets combined\_sum$\
+        \ElsIf{$A[k] == max\_largest\_sum$}
+            \State $last\_prefix\_sum \gets 0$\
+            \State $last\_largest\_sum \gets A[k]$\
+        \ElsIf{$last\_largest\_sum == max\_largest\_sum$}
+            \State $last\_prefix\_sum \gets last\_prefix\_sum + A[k]$\
+        \EndIf
+
+        \State $k \gets k - 1$
+    \EndWhile
+
+    \Return $last\_largest\_sum$
+\end{algorithmic}
+\end{algorithm}
+
+\textbf{Runing Time and Space Analysis}
+There are n iteration, each of which has constant number of operations, hence the algorithm has $O(n)$ time complexity. Furthermore, the algorithm uses $O(1)$ space.
+
+%==============================================================================%
+\newpage
+\begin{problem}{2} 
+
+\end{problem}
+
+\textbf{Recursive Formulation}
+
+\textbf{Proof/Explanation}
+
+\textbf{Pseudocode}
+
+\textbf{Runing Time Analysis}
+
+\bibliographystyle{alpha}
+\bibliography{mybib}
+\end{document}

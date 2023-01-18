@@ -2,7 +2,7 @@
 
 IDIR =./
 CC=clang++
-CFLAGS=-I$(IDIR) -std=c++11
+CFLAGS=-I$(IDIR) -std=c++11 -g
 
 ODIR=../obj
 
@@ -15,7 +15,7 @@ q1_OBJ = q1.o
 q1_OBJ_path = $(patsubst %,$(ODIR)/%,$(q1_OBJ))
 q1: $(q1_OBJ_path)
 	$(CC) -o $@.out $^ $(CFLAGS) $(LIBS)
-	./$@.out
+	# ./$@.out
 
 # keeps make from doing sth with a file named "clean"
 .PHONY: clean
