@@ -113,18 +113,6 @@ First, let $MS(k)$ denote the function that find the nonempty contiguous subarra
 
 $MP$ and $MS$ can be defined recursively as follows:
 
-% \small{
-%     \[
-%         LSA(k)=
-%         \begin{centercases}
-%             (A[k], max(0, A[k]))               & k = n \\
-%             (0,0)               & k > n \lor k \leq 0 \\
-%             (max(A[k], A[k] + LSA(k+1)[1], LSA(k+1)[0]),                &otherwise \\
-%             max(0, LSA(k+1)[1]))        & 
-%         \end{centercases}
-%         \]
-% }
-
 \small{
     \[
         MP(k)=
@@ -151,16 +139,16 @@ $MP$ and $MS$ can be defined recursively as follows:
 
 \textbf{Proof/Explanation}
 
-Proof 1a. For MP's recursive fomular, the first line prevents the algorithm to get out of the boundary of the subject array. In the base case on the second line, there is only one element in $A[k:k]$, so the result must be either empty or $A[k]$. For the inductive step, assume that $MP(k+1)$ returns the max prefix (contiguous subarray that starts from $k+1$ and has the largest sum) of $A[k]$, then $MP[k]$ must be $max(0, A[k] + MP(k+1))$. Because if there exists a larger prefix $A[k:j]$ so that $sum(A[k:j]) = A[k] + sum(A[k+1:j]) > A[k] + MP(k+1)$, then $sum(A[k+1:j] > MP(k+1))$, which contradicts the assumption that $MP(k+1)$ is the max prefix of $A[k+1:n]$. Proof completes.
+\textit{Proof 1a}. For MP's recursive fomular, the first line prevents the algorithm to get out of the boundary of the subject array. In the base case on the second line, there is only one element in $A[k:k]$, so the result must be either empty or $A[k]$. For the inductive step, assume that $MP(k+1)$ returns the max prefix (contiguous subarray that starts from $k+1$ and has the largest sum) of $A[k]$, then $MP[k]$ must be $max(0, A[k] + MP(k+1))$. Because if there exists a larger prefix $A[k:j]$ so that $sum(A[k:j]) = A[k] + sum(A[k+1:j]) > A[k] + MP(k+1)$, then $sum(A[k+1:j] > MP(k+1))$, which contradicts the assumption that $MP(k+1)$ is the max prefix of $A[k+1:n]$. Proof completes.
 
-Proof 1b. For MS's recursive formula, the first line prevents the algorithm to get out of the boundary of the subject array. The second line is the base case in which we consider one element at the right end of the array. $A[k]$ is the only non-empty subarray in $A[k:k]$ so it must also be MS of $A[k:k]$. For the inductive step, assume that $MS(k+1)$ returns the max subarray of $A[k+1:n]$ and $MS(k+1)$ returns that max prefix, $MS(k)$ is guaranteed to be the maximum of the three case mentioned in the third line of the $MS(k)$ formula. Because if there exists a better solution, that is a contiguous subarray whose sum is greater than all of these cases, it will either contain $A[k]$ or not. In the first case when the subarray $S1$ does not contain $A[k]$, it must be within $A[k+1:n]$. $sum(S1) > MS(k+1)$ contradicts the assumption that $MS(k+1)$ is the max subarray of $A[k+1:n]$, hence there not exists such an subarray. In the second case where the subarray $S2$ contains $A[k]$, it can be decomposed to $sum(S2) = A[k] + sum(A[k+1:j])$. Again, $sum(S2) > A[k] + MP(k+1) \iff sum(A[k+i:j]) > MP(k+1)$ contradicts the assumption that $MP(k+1)$ is the max prefix, thus there not exists such an subarray. Proof completes!
+\textit{Proof 1b}. For MS's recursive formula, the first line prevents the algorithm to get out of the boundary of the subject array. The second line is the base case in which we consider one element at the right end of the array. $A[k]$ is the only non-empty subarray in $A[k:k]$ so it must also be MS of $A[k:k]$. For the inductive step, assume that $MS(k+1)$ returns the max subarray of $A[k+1:n]$ and $MS(k+1)$ returns that max prefix, $MS(k)$ is guaranteed to be the maximum of the three case mentioned in the third line of the $MS(k)$ formula. Because if there exists a better solution, that is a contiguous subarray whose sum is greater than all of these cases, it will either contain $A[k]$ or not. In the first case when the subarray $S1$ does not contain $A[k]$, it must be within $A[k+1:n]$. $sum(S1) > MS(k+1)$ contradicts the assumption that $MS(k+1)$ is the max subarray of $A[k+1:n]$, hence there not exists such an subarray. In the second case where the subarray $S2$ contains $A[k]$, it can be decomposed to $sum(S2) = A[k] + sum(A[k+1:j])$. Again, $sum(S2) > A[k] + MP(k+1) \iff sum(A[k+i:j]) > MP(k+1)$ contradicts the assumption that $MP(k+1)$ is the max prefix, thus there not exists such an subarray. Proof completes!
 
 \newpage
 \textbf{Pseudocode}
 Because $MS(k)$ only depends on $MS(k+1)$ and $MP(k)$ only depends on $MP(k+1)$, we can implement them iteratively in the same loop.
 
 \begin{algorithm}
-\caption{$(A[1:n])$}\label{alg:LSA}
+\caption{$(A[1:n])$}\label{alg:q1-LSA}
 \begin{algorithmic}
     \State $ms \gets A[k]$\
     \State $mp \gets max(0, A[k])$\
@@ -265,7 +253,7 @@ We will prove that there not exist a path in T that is longer than LP(L), LP(R),
 For this problem, a recursive implementation seems to be more efficient, readable, and easier to implement compared to an iterative implementation.
 
 \begin{algorithm}
-\caption{$D(T)$}\label{alg:D}
+\caption{$D(T)$}\label{alg:q3-D}
 \begin{algorithmic}
     \If{$T == \emptyset$}
         \Return -1
@@ -280,7 +268,7 @@ For this problem, a recursive implementation seems to be more efficient, readabl
 \end{algorithm}
 
 \begin{algorithm}
-\caption{$LP(T)$}\label{alg:LP}
+\caption{$LP(T)$}\label{alg:q3-LP}
 \begin{algorithmic}
     \If{$T == \emptyset$}
         \Return -1
@@ -304,14 +292,148 @@ The iterative implementation needs to compute LP from the bottom up, that is fro
 Suppose you are given an n x n bitmap, represented by a 2-dimensional array M[1..n, 1..n] of 0s and 1s. A solid block in M is a subarray of the form M[i..i', j..j'] containing only 1s. Describe an algorithm to find the area of the maximum solid block in M in $O(n^3)$ time. If you can do that, try to design a faster algorithm that runs in $O(n^2)$ time.
 \end{problem}
 
+\underline{Observation 1}: Let us call the maximum solid block of $M[1:n,1:n]$ as $MSB[i:i',j:j']$. Observe that $MSB[i:i',j:j']$ is also the maximum solid block of the "sub-right-bottom-matrix" $M[i:n,j:n]$. A maximum solid block in $M$ is guaranteed to be the maximum solid block of the some of the sub-right-bottom-matrices. The maximum of the MSB of these sub-matrices is the final solution to the problem.
+
 \textbf{Recursive Formulation}
+Let us call the first dimension of the matrix as height, and the second dimension as width. Let $R(i,j)$ denotes the rectangle $M[i:n,j:n]$. Let $W[i,j]$ be the width of the widest block in $R(i,j)$ that contains $M[i,j]$ and has height of one, as shown by the green block in Figure \ref{fig:q4-notations}. Let $H[i,j]$ be the height of the tallest solid block in $R(i,j)$ that contains $M[i,j]$ and has width of one, as shown by the blue block in Figure \ref{fig:q4-notations}. Let $L[i,j] = (h,w)$ be the height and width of the largest solid block in $R(i,j)$ that contains $M[i,j]$, as shown by the red block in Figure \ref{fig:q4-notations}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{notation.png} \par
+    \caption{Suboptimal structure. The solution to the black rectangle depends on the solutions to the green, blue, and red rectangles}
+    \label{fig:q4-notations}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{recursion.png} \par
+    \caption{Suboptimal structure. The solution to the black rectangle depends on the solutions to the green, blue, and red rectangles}
+    \label{fig:q4-suboptimal-structure}
+\end{figure}
+
+The recursive formulations of those functions/tables can be defined as follows
+
+
+\small{
+\[
+    W[i,j]=
+    \begin{centercases}
+        0               & M[i,j] = 0 \\
+        \begin{centercases}
+            0               & j = n \\
+            1 + W[i,j+1]    & otherwise \\
+        \end{centercases} & otherwise \\
+    \end{centercases}
+\]
+}
+
+\small{
+\[
+    H[i,j]=
+    \begin{centercases}
+        0               & M[i,j] = 0\\
+        \begin{centercases}
+            0               & i = n \\
+            1 + H[i+1,j]    & otherwise \\
+        \end{centercases} & otherwise \\
+    \end{centercases}
+\]
+}
+
+\small{
+\[
+    L[i,j]=
+    \begin{centercases}
+        (0,0)               & i,j < 1 \lor i,j > n \\
+        (0,0)               & H[i,j] = 0\\
+        \begin{centercases}
+            (H[i,j],1)    & \\
+            (1,W[i,j])    & \\
+            (min(H[i,j], L[i+1,j+1][0] + 1), min(W(i,j), L[i+1,j+1][1] + 1)) & \\
+        \end{centercases} & otherwise\\
+    \end{centercases}
+\]
+}
+
+\normalsize{}
+
+In the otherwise case (line 3,4,5) of the formula $L[i,j]$, the program find the largest solid block between $H[i,j]$, $W[i,j]$, and $min(H[i,j], L[i+1,j+1][0] + 1) \times min(W(i,j), L[i+1,j+1][1] + 1)$.
 
 \textbf{Proof/Explanation}
 
-\textbf{Pseudocode}
+\textit{Proof 4a. }
 
+\underline{Base case}: for rectangles whose top-left corner is on the right edge of $M$, the widest solid blocks obviously have width of one, if they exists.
+
+\underline{Inductive Hypothesis}: assume that $W[i,j+1]$ is the width of the widest block in $R(i,j)$ that contains $M[i,j]$ and has height of one.
+
+\underline{Inductive Step}: assume that there exists some $k$ that $W[i,j] = |M[i,j:k]| > W[i,j+1] + 1$. Removing $M[i,j]$ from $M[i,j:k]$ results in $M[i,j+1:k]$, which contains $M[i,j]$ and longer than $W[i,j+1]$. This contradicts the assumption that $W[i,j+1]$ is the width of the widest block in $R(i,j)$ that contains $M[i,j]$ and has height of one, which shows that $W[i,j] = W[i,j+1] + 1$ is true.
+
+The same reasoning can be used for $H[i,j]$ recursive formulation.
+
+\textit{Proof 4b. } 
+
+\underline{Base case}: for rectangles whose top-left corner is on the right edge of $M$, the largest solid blocks obviously have size equal its $H$. Similarly, for rectangles whose top-left corner is on the bottom edge of $M$, the largest solid blocks obviously have size equal its $W$.
+
+\underline{Inductive Hypothesis}: assume that $L[i+1,j+1]$ are the height and width of the largest solid block in $R(i,j)$ that contains $M[i,j]$.
+
+\underline{Inductive Step}: by looking at Figure \ref{fig:q4-suboptimal-structure}, it is obvious that $L[i,j]$ must be one of the three mentioned in the formula. First, the block has to be within the bound of $W[i,j]$ and $H[i,j]$, the otherwise contradicts the assumption of $W[i,j]$ or $H[i,j]$. Second, the right-bottom corner of the block has to be within $L[i+1,j+1]$, otherwise, $L[i+1,j+1]$ is not the largest solid block of $R(i,j)$. Proof completes!
+
+\textbf{Pseudocode}
+\begin{algorithm}
+\caption{$M[1:n,1:n]$}\label{alg:q4-L}
+\begin{algorithmic}
+    \If{$M == \emptyset$}
+        \Return 0
+    \EndIf
+
+    \State $maxArea \gets 0$, $W \gets []$, $H \gets []$, $L \gets []$, $i \gets n$, $j \gets n$
+
+    \While{$i \geq 1$}
+        \While{$j \geq 1$}
+            \If{$M[i,j] == 0$}
+                \State $W[i,j] \gets 0$, $H[i,j] \gets 0$, $L[i,j] \gets (0,0)$\
+            \ElsIf{$j == n \land i == n$}
+                \State $W[i,j] \gets 1$, $H[i,j] \gets 1$, $L[i,j] \gets (1,1)$\
+            \ElsIf{$j == n$}
+                \State $W[i,j] \gets 1$, $H[i,j] \gets H[i+1,j] + 1$, $L[i,j] \gets H[i,j]$\
+            \ElsIf{$i == n$}
+                \State $W[i,j] \gets W[i,j+1]$, $H[i,j] \gets 1$, $L[i,j] \gets W[i,j]$\
+            \Else
+                \State $W[i,j] \gets W[i,j+1] + 1$\
+                \State $H[i,j] \gets H[i+1,j] + 1$\
+                \State $lh \gets min(H[i,j], L[i+1,j+1][0] + 1)$\
+                \State $lw \gets min(W(i,j), L[i+1,j+1][1] + 1)$\
+                \State $lArea \gets lh * lw$\
+                \State $largestBlock \gets max(H[i,j], W[i,j], crossArea)$\
+
+                \If{$lArea == largestBlock$}
+                    \State $L[i,j] \gets (lh,lw)$\
+                \ElsIf{$W[i,j] == largestBlock$}
+                    \State $L[i,j] \gets (1,W[i,j])$\
+                \Else
+                    \State $L[i,j] \gets (H[i,j],1)$\
+                \EndIf
+
+                \State $maxArea \gets max(maxArea, largestBlock)$\
+            \EndIf
+
+            \State $j \gets j - 1$
+        \EndWhile
+
+        \State $i \gets i - 1$
+    \EndWhile
+
+    \Return $maxArea$
+\end{algorithmic}
+\end{algorithm}
+
+\newpage
 \textbf{Runing Time Analysis}
 
+For time complexity, because the code in the inner loop takes constant time, the algorithm takes $O(n^2)$ in total. For space complexity, Algorithm \ref{alg:q4-L} consumes $O(n^2)$ space to store the $W,H,L$ tables for the entire $M$. However, notice that $L(i,j)$ only depends on the row below and the right cell. Therefore, we only need to keep track of $W,H,L$ tables of $M[i+1,1:n]$ and $M[i,j+1]$, thus reduce the space complexity to $O(n)$.
+
+\newpage
 \bibliographystyle{alpha}
 \bibliography{mybib}
 \end{document}
