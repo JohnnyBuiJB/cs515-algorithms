@@ -205,12 +205,41 @@ Let $MI(i,j)$ denote the program that can return the minimum of insertions to tr
 
 \textbf{Proof/Explanation}
 
-Assume that we know the minimum number of insertions k needed to transform A to a supersequence S of B. S will be also a supersequence of A because we can always remove the inserted letters to transform it back to A. To prove that S is the shortest supersequence of A and B, proof by contradiction is used. Assume that there exists a shorter supersequence R of A and B. We can always transform A to R by only inserting some m letters into A. Because R is shorter than S, m is shorter than k, which contradicts with the assumption that k is the minimum number of insertions needed to transform A to a supersequence of B. Therefore, R does not exist and S is the shortest supersequence of A and B.
+Assume that we know the minimum number of insertions k needed to transform A to a supersequence S of B. S will be also a supersequence of A because we can always remove the inserted letters to transform it back to A. To prove that S is the shortest supersequence of A and B, proof by contradiction is used. Assume that there exists a shorter supersequence R of A and B. We can always transform A to R by only inserting some m letters into A. Because R is shorter than S, m is shorter than k, which contradicts with the assumption that k is the minimum number of insertions needed to transform A to a supersequence of B. Therefore, R does not exist and S must be the shortest supersequence of A and B.
 
+\newpage
 \textbf{Pseudocode}
+
+\begin{algorithm}
+\caption{$(A[1:n],B[1:m])$}\label{alg:q2-MI}
+\begin{algorithmic}
+    \If{$i == 0$}
+        \Return j
+    \EndIf
+
+    \If{$j == 0$}
+        \Return 0
+    \EndIf
+
+    \State Make sure that n is the length of the longer string and m is the length of the shorter string
+
+    \State $j \gets m$\
+
+    \While{$j > 0$}
+        \State $i \gets j$\
+
+        \While{$i > 0$}
+            \State $MI[i,j] \gets min(MI[i,j+1],MI(i+1,j+1))$\
+        \EndWhile
+    \EndWhile
+
+    \Return $MI[1,1]$
+\end{algorithmic}
+\end{algorithm}
 
 \textbf{Runing Time Analysis}
 
+The algorithm takes constant time to fill in less than half the table of size $mxn$, thus takes $O(nm)$ time in total.
 %==============================================================================%
 \newpage
 \begin{problem}{3} 
@@ -250,6 +279,7 @@ We will prove that there not exist a path in T that is longer than LP(L), LP(R),
 
 \newpage
 \textbf{Pseudocode}
+
 For this problem, a recursive implementation seems to be more efficient, readable, and easier to implement compared to an iterative implementation.
 
 \begin{algorithm}
@@ -281,6 +311,8 @@ For this problem, a recursive implementation seems to be more efficient, readabl
     \Return $max(LP(T.L), LP(T.R), D(T.L) + D(T.R) + 2)$
 \end{algorithmic}
 \end{algorithm}
+
+The iterative implementation can be done by first searching for the leaves of the tree using DFS/BFS. Then filling $LP$ from the bottom layer up to the top layer. Because $D$ and $LP$ of trees rooted at nodes at height $h$ only depends on their children at height $h + 1$, each node will be visited exactly once. 
 
 \textbf{Runing Time Analysis}
 
