@@ -1,0 +1,138 @@
+\documentclass[12pt,article]{article}
+\usepackage{fullpage}
+\usepackage[top=2cm, bottom=4.5cm, left=2cm, right=2cm]{geometry}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
+\usepackage{lastpage}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage{mathrsfs}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{mdframed}
+\usepackage{changepage}   % for the adjustwidth environment
+\usepackage{forest} 
+\usepackage{tikz}   % For graph
+
+\usepackage{float}  % To inforce inserting images at the right place
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+% For recursive formulation, adapted from https://tex.stackexchange.com/questions/580333/typing-sequences-recursively-in-overleaf
+\usepackage{mathtools}
+\makeatletter
+\newcases{centercases}{\quad}
+  {\hfil$\m@th\displaystyle{##}$\hfil}
+  {$\m@th\displaystyle{##}$\hfil}{\lbrace}{.}
+\makeatother
+
+\newcommand{\Tau}{\mathrm{T}}
+
+
+% For matrix
+\def\horzbar{\text{magic}}
+
+\hypersetup{%
+  colorlinks=true,
+  linkcolor=blue,
+  linkbordercolor={0 0 1}
+}
+
+\setlength{\parindent}{0.0in}
+\setlength{\parskip}{0.05in}
+
+\newcommand\projnumber{2}
+\newcommand\course{CS534}
+\newcommand\OSUID{934370552}
+\newcommand\Email{buivy@oregonstate.edu}
+\newcommand\Name{Vy Bui}
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+
+\pagestyle{fancyplain}
+\headheight 35pt
+\lhead{Practice Assignment \projnumber}
+\rhead{Jan. 30, 2023}
+\lfoot{}
+\cfoot{}
+\rfoot{\small\thepage}
+\headsep 1.5em
+
+\newenvironment{problem}[2][Problem]
+    { \begin{mdframed}[backgroundcolor=gray!20] \textbf{#1 #2} \\}
+    {  \end{mdframed}}
+   
+
+% Make Rightarrow with superscript
+% \makeatletter
+% \newcommand{\xRightarrow}[2][]{\ext@arrow 0359\Rightarrowfill@{#1}{#2}}
+% \makeatother
+
+\begin{document}
+
+\begin{titlepage}
+    \begin{center}
+        \vspace*{4cm}
+
+        \textbf{\Large CS515 - Algorithms \& Data Structures}
+
+        \vspace{0.5cm}
+ 
+        \textbf{\Large Practice Assignment 1}
+ 
+        \vspace{1cm}
+
+        Vy Bui - 934370552
+
+        \vspace{2cm}
+
+        Instructor: Professor Glencora Borradaile
+        \vfill
+             
+        \vspace{0.8cm}
+      
+             
+        The School of Electrical Engineering and Computer Science\\
+        Oregon State University\\
+             
+    \end{center}
+\end{titlepage}
+
+%==============================================================================%
+\begin{problem}{1} 
+A fixed point of an array A[1..n] is an index i such that A[i] = i. Given a sorted array of distinct integers A[1..n] as input, give a divide-and-conquer algorithm to determine if A has a fixed point that runs in time $O(log n)$.
+\end{problem}
+
+\begin{equation}
+    D_{it} =
+      \begin{cases}
+        1 & \text{if bank $i$ issues ABs at time $t$}\\
+        \begin{cases}
+            1 & \text{if bank $i$ issues ABs at time $t$}\\
+             & \text{if bank $i$ issues CBs at time $t$}\\
+          \end{cases}        & \text{if bank $i$ issues CBs at time $t$}\\
+      \end{cases}       
+  \end{equation}
+
+%==============================================================================%
+\newpage
+\begin{problem}{2} 
+For a sequence of n numbers $a_1, .., a_n$, a \textit{significant inversion} is a pair $(a_i, a_j)$ such that $i < j$ and $a_i > 2a_j$ . Assuming each of the numbers $a_i$ is distinct, give an $O(nlogn)$ time algorithm to count the number of significant inversions in a sequence. (Hint: modify merge sort.)
+\end{problem}
+
+%==============================================================================%
+\newpage
+\begin{problem}{3} 
+You are given two sorted arrays of size m and n. Give an $O(logm + logn)$ time algorithm for computing the k-th smallest element in the union of the two arrays.
+\end{problem}
+
+%==============================================================================%
+\newpage
+\begin{problem}{4} 
+You are given an $n \times n$ matrix A[1..n, 1..n] where all elements are distinct. We say that an element A[x] is a \textit{local minimum} if it is less than its (at most) four neighbors, i.e. its up, down, left and right neighbors. Give an $O(n)$ time algorithm to find a local minimum of A.
+\end{problem}
+
+\bibliographystyle{alpha}
+\bibliography{mybib}
+\end{document}
