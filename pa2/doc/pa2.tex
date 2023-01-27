@@ -104,16 +104,59 @@
 A fixed point of an array A[1..n] is an index i such that A[i] = i. Given a sorted array of distinct integers A[1..n] as input, give a divide-and-conquer algorithm to determine if A has a fixed point that runs in time $O(log n)$.
 \end{problem}
 
-\begin{equation}
-    D_{it} =
-      \begin{cases}
-        1 & \text{if bank $i$ issues ABs at time $t$}\\
-        \begin{cases}
-            1 & \text{if bank $i$ issues ABs at time $t$}\\
-             & \text{if bank $i$ issues CBs at time $t$}\\
-          \end{cases}        & \text{if bank $i$ issues CBs at time $t$}\\
-      \end{cases}       
-  \end{equation}
+\textbf{Description}
+Let $FP(i,j)$ be the function that checks if there exists a fixed point in A[i,j]. Observe that if there exists a fixed point k A[i,j], then k must be either in the left half or the right half of A[i,j]. Instead of checking the entire array, we can check its two halves and then combine the results.
+
+\textbf{Recurrence}
+
+\small{
+    \[
+    FP(i,j)=
+    \begin{centercases}
+        \begin{centercases}
+            True               & A[i] = i \\
+            False              & otherwise \\
+        \end{centercases}            & i = j \\
+        \begin{centercases}
+            FP(i, \frac{i+j}{2}) \lor FP(\frac{i+j}{2} + 1, j)    &  \\
+        \end{centercases}            & otherwise \\
+    \end{centercases} 
+    \]
+}
+
+\textbf{Pseudocode}
+
+\begin{algorithm}
+\caption{$FP(i,j)$}\label{alg:q2}
+\begin{algorithmic}
+    \If{$i == j$}
+        \If{$A[i] == i$}
+
+            \Return True
+        \Else 
+
+            \Return False
+        \EndIf
+    \EndIf
+
+    \State $m \gets \frac{i+j}{2}$
+
+    \Return $FP(i,m) \lor FP(m+1,j)$
+\end{algorithmic}
+\end{algorithm}
+
+\textbf{Proof of Correctness}
+
+\textit{Base Case}: when A has only one element, it is obvious that 
+
+
+\textit{Inductive Hypothesis}: assume that we know the results of $FP(i,m)$ and $FP(m+1,j)$, with $m = \frac{i+j}{2}$.
+
+\textit{Inductive Step}: It is trivial that if at least one of $FP(i,m)$ and $FP(m+1,j)$ is true, then $FP(i,j)$ is true because they use the same indices and values of A.
+
+\textbf{Runing Time Analysis}
+
+The algorithm splits the problem into two roughly equal halves and merge the results in constant time. Therefore, the running time of this algorithm is $T(n) = 2T(\frac{n}{2}) + O(1) = O(n)$
 
 %==============================================================================%
 \newpage
@@ -121,17 +164,165 @@ A fixed point of an array A[1..n] is an index i such that A[i] = i. Given a sort
 For a sequence of n numbers $a_1, .., a_n$, a \textit{significant inversion} is a pair $(a_i, a_j)$ such that $i < j$ and $a_i > 2a_j$ . Assuming each of the numbers $a_i$ is distinct, give an $O(nlogn)$ time algorithm to count the number of significant inversions in a sequence. (Hint: modify merge sort.)
 \end{problem}
 
+\textbf{Description}
+Let $FP(i,j)$ be the function that checks if there exists a fixed point in A[i,j]. Observe that if there exists a fixed point k A[i,j], then k must be either in the left half or the right half of A[i,j]. Instead of checking the entire array, we can check its two halves and then combine the results.
+
+\textbf{Recurrence}
+
+\small{
+    \[
+    FP(i,j)=
+    \begin{centercases}
+        \begin{centercases}
+            True               & A[i] = i \\
+            False              & otherwise \\
+        \end{centercases}            & i = j \\
+        \begin{centercases}
+            FP(i, \frac{i+j}{2}) \lor FP(\frac{i+j}{2} + 1, j)    &  \\
+        \end{centercases}            & otherwise \\
+    \end{centercases} 
+    \]
+}
+
+\textbf{Pseudocode}
+
+\begin{algorithm}
+\caption{$FP(i,j)$}\label{alg:q3}
+\begin{algorithmic}
+    \If{$i == j$}
+        \If{$A[i] == i$}
+
+            \Return True
+        \Else 
+
+            \Return False
+        \EndIf
+    \EndIf
+
+    \State $m \gets \frac{i+j}{2}$
+
+    \Return $FP(i,m) \lor FP(m+1,j)$
+\end{algorithmic}
+\end{algorithm}
+
+\textbf{Proof of Correctness}
+
+\textit{Base Case}
+\textit{Inductive Hypothesis}
+\textit{Inductive Step}
+
+\textbf{Runing Time Analysis}
+
 %==============================================================================%
 \newpage
 \begin{problem}{3} 
 You are given two sorted arrays of size m and n. Give an $O(logm + logn)$ time algorithm for computing the k-th smallest element in the union of the two arrays.
 \end{problem}
 
+\textbf{Description}
+Let $FP(i,j)$ be the function that checks if there exists a fixed point in A[i,j]. Observe that if there exists a fixed point k A[i,j], then k must be either in the left half or the right half of A[i,j]. Instead of checking the entire array, we can check its two halves and then combine the results.
+
+\textbf{Recurrence}
+
+\small{
+    \[
+    FP(i,j)=
+    \begin{centercases}
+        \begin{centercases}
+            True               & A[i] = i \\
+            False              & otherwise \\
+        \end{centercases}            & i = j \\
+        \begin{centercases}
+            FP(i, \frac{i+j}{2}) \lor FP(\frac{i+j}{2} + 1, j)    &  \\
+        \end{centercases}            & otherwise \\
+    \end{centercases} 
+    \]
+}
+
+\textbf{Pseudocode}
+
+\begin{algorithm}
+\caption{$FP(i,j)$}\label{alg:q4}
+\begin{algorithmic}
+    \If{$i == j$}
+        \If{$A[i] == i$}
+
+            \Return True
+        \Else 
+
+            \Return False
+        \EndIf
+    \EndIf
+
+    \State $m \gets \frac{i+j}{2}$
+
+    \Return $FP(i,m) \lor FP(m+1,j)$
+\end{algorithmic}
+\end{algorithm}
+
+\textbf{Proof of Correctness}
+
+\textit{Base Case}
+\textit{Inductive Hypothesis}
+\textit{Inductive Step}
+
+
+\textbf{Runing Time Analysis}
+
 %==============================================================================%
 \newpage
 \begin{problem}{4} 
 You are given an $n \times n$ matrix A[1..n, 1..n] where all elements are distinct. We say that an element A[x] is a \textit{local minimum} if it is less than its (at most) four neighbors, i.e. its up, down, left and right neighbors. Give an $O(n)$ time algorithm to find a local minimum of A.
 \end{problem}
+
+\textbf{Description}
+Let $FP(i,j)$ be the function that checks if there exists a fixed point in A[i,j]. Observe that if there exists a fixed point k A[i,j], then k must be either in the left half or the right half of A[i,j]. Instead of checking the entire array, we can check its two halves and then combine the results.
+
+\textbf{Recurrence}
+
+\small{
+    \[
+    FP(i,j)=
+    \begin{centercases}
+        \begin{centercases}
+            True               & A[i] = i \\
+            False              & otherwise \\
+        \end{centercases}            & i = j \\
+        \begin{centercases}
+            FP(i, \frac{i+j}{2}) \lor FP(\frac{i+j}{2} + 1, j)    &  \\
+        \end{centercases}            & otherwise \\
+    \end{centercases} 
+    \]
+}
+
+\textbf{Pseudocode}
+
+\begin{algorithm}
+\caption{$FP(i,j)$}\label{alg:q1-fp}
+\begin{algorithmic}
+    \If{$i == j$}
+        \If{$A[i] == i$}
+
+            \Return True
+        \Else 
+
+            \Return False
+        \EndIf
+    \EndIf
+
+    \State $m \gets \frac{i+j}{2}$
+
+    \Return $FP(i,m) \lor FP(m+1,j)$
+\end{algorithmic}
+\end{algorithm}
+
+\textbf{Proof of Correctness}
+
+\textit{Base Case}
+\textit{Inductive Hypothesis}
+\textit{Inductive Step}
+
+\textbf{Runing Time Analysis}
 
 \bibliographystyle{alpha}
 \bibliography{mybib}
