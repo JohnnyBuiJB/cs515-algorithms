@@ -105,20 +105,20 @@ A fixed point of an array A[1..n] is an index i such that A[i] = i. Given a sort
 \end{problem}
 
 \textbf{Description}
-Let $FP(i,j)$ be the function that checks if there exists a fixed point in A[i,j]. Observe that if there exists a fixed point k A[i,j], then k must be either in the left half or the right half of A[i,j]. Instead of checking the entire array, we can check its two halves and then combine the results.
+Let $FP(i,j)$ be the function that checks if there exists a fixed point in $A[i,j]$. Imagine $A[k]$ as a discrete function of index k with $i \geq k \geq j$, then the fixed point of A is the intersection between $A[k]$ and the identity function $I[k]$. Because A is a distinct increasing array of integer, the rate of change of A at each index k must be greater than or equal to $I[k]$, which is equal 1 for all k. Therefore, $A[k]$ can only intersect $I[k]$ if $A[i] \leq i$ and $A[j] \geq j$.
 
 \textbf{Recurrence}
+Let $m = \frac{i+j}{2}$, the recursive formulation can be described as follows
 
 \small{
     \[
     FP(i,j)=
     \begin{centercases}
+        False               & i > j \\
         \begin{centercases}
-            True               & A[i] = i \\
-            False              & otherwise \\
-        \end{centercases}            & i = j \\
-        \begin{centercases}
-            FP(i, \frac{i+j}{2}) \lor FP(\frac{i+j}{2} + 1, j)    &  \\
+            True               & A[m] = m \\
+            FP(i, m)           & A[m] > m \\
+            FP(m+1, j)         & A[m] < m \\
         \end{centercases}            & otherwise \\
     \end{centercases} 
     \]
@@ -129,34 +129,38 @@ Let $FP(i,j)$ be the function that checks if there exists a fixed point in A[i,j
 \begin{algorithm}
 \caption{$FP(i,j)$}\label{alg:q2}
 \begin{algorithmic}
-    \If{$i == j$}
-        \If{$A[i] == i$}
+    \If{$i > j$}
 
-            \Return True
-        \Else 
-
-            \Return False
-        \EndIf
+        \Return False
     \EndIf
 
-    \State $m \gets \frac{i+j}{2}$
+    \State $m \gets (i+j) / 2$
 
-    \Return $FP(i,m) \lor FP(m+1,j)$
+    \If{$A[m] == m$}
+
+        \Return True
+    \ElsIf{$A[m] > m$}
+
+        \Return $FP(i,m)$
+    \Else
+
+        \Return $FP(m+1,j)$
+    \EndIf
+
 \end{algorithmic}
 \end{algorithm}
 
 \textbf{Proof of Correctness}
 
-\textit{Base Case}: when A has only one element, it is obvious that 
+\textit{Base Case}: first, if A only has one element, if there exists a fixed point, then it has to be that element. Second, the left index i greater than the right index j indicates an empty array, which implies that no fixed point exists.
 
-
-\textit{Inductive Hypothesis}: assume that we know the results of $FP(i,m)$ and $FP(m+1,j)$, with $m = \frac{i+j}{2}$.
+\textit{Inductive Hypothesis}: $FP(i,m)$ and $FP(m+1,j)$ correctly determine if $[i,m]$ and $A[m+1,j]$ contain a fixed point, respectively.
 
 \textit{Inductive Step}: It is trivial that if at least one of $FP(i,m)$ and $FP(m+1,j)$ is true, then $FP(i,j)$ is true because they use the same indices and values of A.
 
 \textbf{Runing Time Analysis}
 
-The algorithm splits the problem into two roughly equal halves and merge the results in constant time. Therefore, the running time of this algorithm is $T(n) = 2T(\frac{n}{2}) + O(1) = O(n)$
+On each recursive call, the algorithm splits the problem into two roughly equal halves and only solves one of them. It takes constant time to check if the midpoint is the fixed point. Therefore, the total running time of this algorithm is $T(n) = T(\frac{n}{2}) + O(1) = O(logn)$.
 
 %==============================================================================%
 \newpage
@@ -165,7 +169,6 @@ For a sequence of n numbers $a_1, .., a_n$, a \textit{significant inversion} is 
 \end{problem}
 
 \textbf{Description}
-Let $FP(i,j)$ be the function that checks if there exists a fixed point in A[i,j]. Observe that if there exists a fixed point k A[i,j], then k must be either in the left half or the right half of A[i,j]. Instead of checking the entire array, we can check its two halves and then combine the results.
 
 \textbf{Recurrence}
 
