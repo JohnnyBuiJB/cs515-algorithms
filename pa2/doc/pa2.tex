@@ -268,20 +268,50 @@ You are given two sorted arrays of size m and n. Give an $O(logm + logn)$ time a
 
 \textbf{Description}
 
-\textbf{Recurrence}
+Let us call the two sorted arrays $A$ and $B$ with $i$ and $j$ as their indices, respectively. We can apply binary search on both arrays to find two points $1 \leq i \leq m$ and $1 \leq j \leq n$ such that $i + j = k$. Then the k-th smallest element in the union of the two arrays will be $max(A_i,B_j)$.
 
+To begin with, $i$ and $j$ are the midpoints of the subarrays of interest of A and B. The algorithm starts off considering the entire two arrays and assigns their midpoints to $i$ and $j$. Given $i$ and $j$, we know that $G = max(A_i,B_j)$ is the $(i+j)^{th}$ element of the union because $G$ is larger than all elements on the left of $A_i$ and those of $B_j$. When $i + j > k$, we eliminate the right half of the subarray that contains $max(A_i,B_j)$. On the other hand, if $i+j < k$, we eliminate the left half of the subarray that contains $S = min(A_i,B_j)$ by half. 
 
 \textbf{Pseudocode}
 
+\begin{algorithm}
+\caption{$FK(A[1:m],B[1:n]),k$}\label{alg:q3}
+\begin{algorithmic}
+    \State $al, ar, bl, br \gets 1,m,1,n$
+    
+    \While{$al < ar \lor bl < br$}
+        \State $i \gets (al + ar) / 2$
+        \State $j \gets (bl + br) / 2$
+
+        \If{$i + j == k$}
+            \Return $max(A[i],B[j])$
+        \ElsIf{$i + j < k$}
+            \State $L \gets min(A[i],B[j])$
+
+            \If{$L == A[i]$}
+                \State $al \gets i$
+            \Else
+                \State $bl \gets j$
+            \EndIf
+        \Else
+            \State $G \gets max(A[i],B[j])$
+
+            \If{$G == A[i]$}
+                \State $ar \gets i$
+            \Else
+                \State $br \gets j$
+            \EndIf
+        \EndIf
+    \EndWhile
+\end{algorithmic}
+\end{algorithm}
 
 \textbf{Proof of Correctness}
 
-\textit{Base Case}
-\textit{Inductive Hypothesis}
-\textit{Inductive Step}
-
+To prove that this algorithm, we will prove that it always correctly eliminates numbers that are not the target. In the first case when $i + j < k$, assume that $A_i < B_j$, then the union $U = A[1:i] \cup B[1:j] = ...,A_i,...,B_j...$. Therefore, $A[1:i-1] < A_i < target$ can be safely removed from consideration. In the second case when $i + j > k$, assume that $A_i < B_j$, then the union $U = A[1:i] \cup B[1:j] = ...,A_i,...,B_j...$. Therefore, $B[j+1:m] > B_j > target$ can be safely removed from consideration. The algorithm will terminate because it eliminates half of one of the subarrays at each iteration. 
 
 \textbf{Runing Time Analysis}
+Because the algorithm eliminates half of one of the two arrays at each iteration, it takes $O(logm + logn)$ to eliminate all elements from both arrays.
 
 %==============================================================================%
 \newpage
