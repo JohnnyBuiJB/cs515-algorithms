@@ -136,7 +136,7 @@ Let $m = \frac{i+j}{2}$, the recursive formulation can be described as follows
 
     \State $m \gets (i+j) / 2$
 
-    \If{$A[m] == m$}
+    \If{$A[m] = m$}
 
         \Return True
     \ElsIf{$A[m] > m$}
@@ -169,19 +169,27 @@ For a sequence of n numbers $a_1, .., a_n$, a \textit{significant inversion} is 
 \end{problem}
 
 \textbf{Description}
+Let $SI(A)$ denotes the function that counts the number of significant inversions in A, and let $BS(i,j,t)$ denote the function that can find the minimum number that is greater than or equal to target $t$. Assume that A is sorted, for each $a_i$, we can use $BS$ to search for $2a_i + 1$, and then count the numbers of the following numbers in A. The final result is the sum of all counts.
 
 \textbf{Recurrence}
 
+Let $m = \frac{i+j}{2}$. The reccurence can be described as follows
+
 \small{
     \[
-    FP(i,j)=
+    BS(i,j,t)=
     \begin{centercases}
+        i+1               & i > j \\
         \begin{centercases}
-            True               & A[i] = i \\
-            False              & otherwise \\
+            i               & A[i] \geq t \\
+            i+1              & otherwise \\
         \end{centercases}            & i = j \\
         \begin{centercases}
-            FP(i, \frac{i+j}{2}) \lor FP(\frac{i+j}{2} + 1, j)    &  \\
+            m    & A[m] = t \\
+            \begin{centercases}
+                min(BS(i,m-1,t),m)                 & t < A[m] \\
+                BS(m+1,j,t)               & t > A[m] \\
+            \end{centercases}         & otherwise \\
         \end{centercases}            & otherwise \\
     \end{centercases} 
     \]
@@ -190,32 +198,68 @@ For a sequence of n numbers $a_1, .., a_n$, a \textit{significant inversion} is 
 \textbf{Pseudocode}
 
 \begin{algorithm}
-\caption{$FP(i,j)$}\label{alg:q3}
+\caption{$SI(A[1,n])$}\label{alg:q2-si}
 \begin{algorithmic}
-    \If{$i == j$}
-        \If{$A[i] == i$}
+    \State $Sort A$
+    
+    \State $count \gets 0$
 
-            \Return True
-        \Else 
+    \For{$i : [1,n - 1]$}
 
-            \Return False
+        \State $k = BS(i+1,n,2A[i] + 1)$
+
+        \If{$k \neq -1$}
+            \State $count \gets count + max(0,n-k+1)$
+        \EndIf
+
+        
+    \EndFor
+    
+    \Return $count$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{$BS(i,j,t)$}\label{alg:q2-bs}
+\begin{algorithmic}
+    \If{$i > j$}
+        \Return $-1$
+    \ElsIf{$i = j$}
+        \If{$A[i] > t$}
+            \Return $i$
+        \Else  
+            \Return $i + 1$
+        \EndIf
+    \Else
+        \State $m \gets \frac{i+j}{2}$
+
+        \If{$t = A[m]$}
+            
+            \Return $m$
+        \ElsIf{$t < A[m]$}
+            
+            \Return $BS(i,m-1,t)$
+        \Else  
+            
+            \Return $BS(m+1,j,t)$
         \EndIf
     \EndIf
-
-    \State $m \gets \frac{i+j}{2}$
-
-    \Return $FP(i,m) \lor FP(m+1,j)$
 \end{algorithmic}
 \end{algorithm}
 
 \textbf{Proof of Correctness}
 
-\textit{Base Case}
+First, we assume that $BS(i,j,t)$ correctly determines the minimum number that is greater than or equal target $t$ and we prove that $SI(A[1,n])$ can count the number of significant inversions. For each $a_i$, $BS$ is use to find the minimum number that is greater or equal to $2a_i + 1$ in subarray $A[i+1,n]$. Because $A$ is sorted, we do not need to search in the subarray before $a_i$. If $BS$ cannot find the minimum number that is greater or equal to $2a_i + 1$ and return -1, then there are no significant inversions that contain $a_i$. In case that $BS$ can find such a number $a_k$, then all of the numbers following and including $a_k$ in A can make a significant inversion with $a_i$. Applying this for every number in A and summing up the counts will produce the final result to the problem.
+
+Second, we prove that $BS(i,j,t)$ correctly determines the minimum number that is greater than or equal target $t$ in a sorted array $A$. Similar to binary search, the algorithm also searchs for target $t$ in $A[i,j]$. If it can find $t$, then $t$ is also the number of interest. It it cannot find $t$, then it returns the minimum number that is greater than $t$. 
+
+\textit{Base Case}: when $i = j$, there is only one element to consider. If it is equal to the target then it is the number of interest. If it is not equal to the target, 
 \textit{Inductive Hypothesis}
 \textit{Inductive Step}
 
 \textbf{Runing Time Analysis}
 
+We can use merge sort or quick sort to sort A in $O(nlogn)$. $BS$ takes $O(logn)$ to search. Because it is called $O(n)$ times, the entire algorithm will take $O(nlogn)$.
 %==============================================================================%
 \newpage
 \begin{problem}{3} 
@@ -223,45 +267,12 @@ You are given two sorted arrays of size m and n. Give an $O(logm + logn)$ time a
 \end{problem}
 
 \textbf{Description}
-Let $FP(i,j)$ be the function that checks if there exists a fixed point in A[i,j]. Observe that if there exists a fixed point k A[i,j], then k must be either in the left half or the right half of A[i,j]. Instead of checking the entire array, we can check its two halves and then combine the results.
 
 \textbf{Recurrence}
 
-\small{
-    \[
-    FP(i,j)=
-    \begin{centercases}
-        \begin{centercases}
-            True               & A[i] = i \\
-            False              & otherwise \\
-        \end{centercases}            & i = j \\
-        \begin{centercases}
-            FP(i, \frac{i+j}{2}) \lor FP(\frac{i+j}{2} + 1, j)    &  \\
-        \end{centercases}            & otherwise \\
-    \end{centercases} 
-    \]
-}
 
 \textbf{Pseudocode}
 
-\begin{algorithm}
-\caption{$FP(i,j)$}\label{alg:q4}
-\begin{algorithmic}
-    \If{$i == j$}
-        \If{$A[i] == i$}
-
-            \Return True
-        \Else 
-
-            \Return False
-        \EndIf
-    \EndIf
-
-    \State $m \gets \frac{i+j}{2}$
-
-    \Return $FP(i,m) \lor FP(m+1,j)$
-\end{algorithmic}
-\end{algorithm}
 
 \textbf{Proof of Correctness}
 
@@ -279,45 +290,12 @@ You are given an $n \times n$ matrix A[1..n, 1..n] where all elements are distin
 \end{problem}
 
 \textbf{Description}
-Let $FP(i,j)$ be the function that checks if there exists a fixed point in A[i,j]. Observe that if there exists a fixed point k A[i,j], then k must be either in the left half or the right half of A[i,j]. Instead of checking the entire array, we can check its two halves and then combine the results.
 
 \textbf{Recurrence}
 
-\small{
-    \[
-    FP(i,j)=
-    \begin{centercases}
-        \begin{centercases}
-            True               & A[i] = i \\
-            False              & otherwise \\
-        \end{centercases}            & i = j \\
-        \begin{centercases}
-            FP(i, \frac{i+j}{2}) \lor FP(\frac{i+j}{2} + 1, j)    &  \\
-        \end{centercases}            & otherwise \\
-    \end{centercases} 
-    \]
-}
 
 \textbf{Pseudocode}
 
-\begin{algorithm}
-\caption{$FP(i,j)$}\label{alg:q1-fp}
-\begin{algorithmic}
-    \If{$i == j$}
-        \If{$A[i] == i$}
-
-            \Return True
-        \Else 
-
-            \Return False
-        \EndIf
-    \EndIf
-
-    \State $m \gets \frac{i+j}{2}$
-
-    \Return $FP(i,m) \lor FP(m+1,j)$
-\end{algorithmic}
-\end{algorithm}
 
 \textbf{Proof of Correctness}
 
