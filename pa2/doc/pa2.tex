@@ -316,9 +316,48 @@ You are given an $n \times n$ matrix A[1..n, 1..n] where all elements are distin
 \end{problem}
 
 \textbf{Description}
-The idea is to narrow down the position of the local minimum by elimination. First, We divide the matrix into 4 parts by a cross $A[1:n, n/2]$ and $A[n/2, 1:n]$. Then we search for the smallest element $s$ in the cross. If $s$ is the center of the cross then it is also the local minimum. Otherwise, if both of its neighbors are greater, then $s$ is also a local minimum. Other than those cases, we find $s$'s smallest neighbors $sn$. The quadrant that contains $sn$ must also contain a local minimum because that if we follow a path from $s$ to its smallest neighbor and so on, we eventually reach a cell $c$ where we cannot move to another cell because $c$ is smaller than all cell on the cross. In other words, the cross is the boundary of the quadrant.
+The idea is to narrow down the position of the local minimum by elimination. First, We divide the matrix into 4 parts by a cross $A[1:n, n/2]$ and $A[n/2, 1:n]$. Then we search for the smallest element $s$ in the cross. If $s$ is the center of the cross then it is also the local minimum. Otherwise, if both of its neighbors are greater, then $s$ is also a local minimum. Other than those cases, we find the quadrant that contains $s$'s smallest neighbor, and recursively apply the algorithm on it until a local minimum is found.
 
-In light of that, we can recursively draw another cross to narrow down the position of a local minimum until finding the local minimum.
+\textbf{Pseudocode}
+
+\begin{algorithm}
+\caption{$LM(A[1:n,1:n]),k$}\label{alg:q4}
+\begin{algorithmic}
+    \State $xmin \gets 1$
+    \State $xmax \gets n$
+    \State $ymin \gets 1$
+    \State $ymax \gets n$
+    
+    \While{$xmin < xmax \lor ymin < ymax$}
+        \State $xmid \gets (xmax - xmin) / 2$
+        \State $ymid \gets (ymax - ymin) / 2$
+
+        \State $minCell \gets MAXINT$
+        \State $minRow \gets xmid$
+        \State $minCol \gets ymid$
+        \For{$A[i,j] \in A[m,1:n] \cup A[1:n,m]$}
+            \If{$a < minCell$}
+                \State $minCell \gets a$
+
+                \State $minRow \gets i$
+                \State $minCol \gets j$
+            \EndIf
+        \EndFor
+
+        \If{$minRow == xmid \land minCol == ymid$}
+            \Return $A[minRow,minCol]$
+        \EndIf
+
+        \State $minNeighbor \gets MinNeighbor(minRow,minCol)$
+        \State Update xmin,xmax,ymin,ymax to those of the quadrant that contains minNeighbor
+
+    \EndWhile
+\end{algorithmic}
+\end{algorithm}
+
+\textbf{Proof of Correctness}
+
+The quadrant that contains the minimum neighbor must also contain a local minimum because if we follow a downward path from $s$ to its minimum neighbor and so on, we eventually reach a cell $c$ where we cannot move to another cell because $c < s$, which is smaller than all cells on the cross. In other words, the cross is the boundary of the quadrant. If we recursively drawing crosses to divide the matrix, eventually the local minimum will lie on the cross.
 
 \textbf{Runing Time Analysis}
 This algorithm takes $2n + 2\frac{n}{2} + 2\frac{n}{4} + ... = O(n)$ (geometric series) time to find the minimum number in the crosses. It takes constant time to check cases and find the smallest neighbor of $s$. Totally, the algorithm takes $O(n)$.
