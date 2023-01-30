@@ -79,7 +79,7 @@
 
         \vspace{0.5cm}
  
-        \textbf{\Large Practice Assignment 1}
+        \textbf{\Large Practice Assignment 2}
  
         \vspace{1cm}
 
@@ -253,10 +253,6 @@ First, we assume that $BS(i,j,t)$ correctly determines the minimum number that i
 
 Second, we prove that $BS(i,j,t)$ correctly determines the minimum number that is greater than or equal target $t$ in a sorted array $A$. Similar to binary search, the algorithm also searchs for target $t$ in $A[i,j]$. If it can find $t$, then $t$ is also the number of interest. It it cannot find $t$, then it returns the minimum number that is greater than $t$. 
 
-\textit{Base Case}: when $i = j$, there is only one element to consider. If it is equal to the target then it is the number of interest. If it is not equal to the target, 
-\textit{Inductive Hypothesis}
-\textit{Inductive Step}
-
 \textbf{Runing Time Analysis}
 
 We can use merge sort or quick sort to sort A in $O(nlogn)$. $BS$ takes $O(logn)$ to search. Because it is called $O(n)$ times, the entire algorithm will take $O(nlogn)$.
@@ -320,20 +316,12 @@ You are given an $n \times n$ matrix A[1..n, 1..n] where all elements are distin
 \end{problem}
 
 \textbf{Description}
+The idea is to narrow down the position of the local minimum by elimination. First, We divide the matrix into 4 parts by a cross $A[1:n, n/2]$ and $A[n/2, 1:n]$. Then we search for the smallest element $s$ in the cross. If $s$ is the center of the cross then it is also the local minimum. Otherwise, if both of its neighbors are greater, then $s$ is also a local minimum. Other than those cases, we find $s$'s smallest neighbors $sn$. The quadrant that contains $sn$ must also contain a local minimum because that if we follow a path from $s$ to its smallest neighbor and so on, we eventually reach a cell $c$ where we cannot move to another cell because $c$ is smaller than all cell on the cross. In other words, the cross is the boundary of the quadrant.
 
-\textbf{Recurrence}
-
-
-\textbf{Pseudocode}
-
-
-\textbf{Proof of Correctness}
-
-\textit{Base Case}
-\textit{Inductive Hypothesis}
-\textit{Inductive Step}
+In light of that, we can recursively draw another cross to narrow down the position of a local minimum until finding the local minimum.
 
 \textbf{Runing Time Analysis}
+This algorithm takes $2n + 2\frac{n}{2} + 2\frac{n}{4} + ... = O(n)$ (geometric series) time to find the minimum number in the crosses. It takes constant time to check cases and find the smallest neighbor of $s$. Totally, the algorithm takes $O(n)$.
 
 \bibliographystyle{alpha}
 \bibliography{mybib}
