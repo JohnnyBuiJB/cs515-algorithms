@@ -169,50 +169,28 @@ For a sequence of n numbers $a_1, .., a_n$, a \textit{significant inversion} is 
 \end{problem}
 
 \textbf{Description}
+We solve this problem by first sort the array, then we iteratively do binary search for the smallest possible significant inversion on the rest of the array. In particular, for each $a_i$, we search for $2a_i + 1$ on $A[i+1:n]$. If we can find such a number $A[k]$, then there are $(n-k+1)$ elements in that can make a significant inversion with $a_i$. If such a number does not exist in $A$, we check the last element that binary search checks. This number must be either the largest number that is less than $2a_i + 1$ or the smallest number that is greater than $2a_i + 1$. If it is the former then all numbers following it in $A$ must be greater than $2a_i + 1$, which can make up a significant pair with $a_i$. We can modify binary search to return the last number that was checked.
+
 Let $SI(A)$ denotes the function that counts the number of significant inversions in A, and let $BS(i,j,t)$ denote the function that can find the minimum number that is greater than or equal to target $t$. Assume that A is sorted, for each $a_i$, we can use $BS$ to search for $2a_i + 1$, and then count the numbers of the following numbers in A. The final result is the sum of all counts.
-
-\textbf{Recurrence}
-
-Let $m = \frac{i+j}{2}$. The reccurence can be described as follows
-
-\small{
-    \[
-    BS(i,j,t)=
-    \begin{centercases}
-        i+1               & i > j \\
-        \begin{centercases}
-            i               & A[i] \geq t \\
-            i+1              & otherwise \\
-        \end{centercases}            & i = j \\
-        \begin{centercases}
-            m    & A[m] = t \\
-            \begin{centercases}
-                min(BS(i,m-1,t),m)                 & t < A[m] \\
-                BS(m+1,j,t)               & t > A[m] \\
-            \end{centercases}         & otherwise \\
-        \end{centercases}            & otherwise \\
-    \end{centercases} 
-    \]
-}
 
 \textbf{Pseudocode}
 
 \begin{algorithm}
-\caption{$SI(A[1,n])$}\label{alg:q2-si}
+\caption{$CSI(A[1,n])$}\label{alg:q2-csi}
 \begin{algorithmic}
     \State $Sort A$
     
     \State $count \gets 0$
 
     \For{$i : [1,n - 1]$}
+        \State $target = 2A[i] + 1$
+        \State $k = BS(i+1,n,target)$
 
-        \State $k = BS(i+1,n,2A[i] + 1)$
-
-        \If{$k \neq -1$}
-            \State $count \gets count + max(0,n-k+1)$
+        \If{$A[k] >= target$}
+            \State $count \gets count + n - k + 1$
+        \Else
+            \State $count \gets count + n - k$
         \EndIf
-
-        
     \EndFor
     
     \Return $count$
@@ -220,42 +198,43 @@ Let $m = \frac{i+j}{2}$. The reccurence can be described as follows
 \end{algorithm}
 
 \begin{algorithm}
-\caption{$BS(i,j,t)$}\label{alg:q2-bs}
+\caption{$BS(l,r,t)$}\label{alg:q2-mbs}
 \begin{algorithmic}
-    \If{$i > j$}
-        \Return $-1$
-    \ElsIf{$i = j$}
-        \If{$A[i] > t$}
-            \Return $i$
-        \Else  
-            \Return $i + 1$
-        \EndIf
-    \Else
-        \State $m \gets \frac{i+j}{2}$
+    \If{$l == r$}
+        \Return $i$
+    \EndIf
 
-        \If{$t = A[m]$}
-            
-            \Return $m$
-        \ElsIf{$t < A[m]$}
-            
-            \Return $BS(i,m-1,t)$
-        \Else  
-            
-            \Return $BS(m+1,j,t)$
-        \EndIf
+    \State $m \gets \frac{l+r}{2}$
+
+    \If{$t = A[m]$}
+        
+        \Return $m$
+    \ElsIf{$t < A[m]$}
+        
+        \Return $BS(l,m-1,t)$
+    \Else  
+        
+        \Return $BS(m+1,r,t)$
     \EndIf
 \end{algorithmic}
 \end{algorithm}
 
 \textbf{Proof of Correctness}
 
-First, we assume that $BS(i,j,t)$ correctly determines the minimum number that is greater than or equal target $t$ and we prove that $SI(A[1,n])$ can count the number of significant inversions. For each $a_i$, $BS$ is use to find the minimum number that is greater or equal to $2a_i + 1$ in subarray $A[i+1,n]$. Because $A$ is sorted, we do not need to search in the subarray before $a_i$. If $BS$ cannot find the minimum number that is greater or equal to $2a_i + 1$ and return -1, then there are no significant inversions that contain $a_i$. In case that $BS$ can find such a number $a_k$, then all of the numbers following and including $a_k$ in A can make a significant inversion with $a_i$. Applying this for every number in A and summing up the counts will produce the final result to the problem.
+First, prove that the modified $BS(l,r,t)$ correctly finds $t$, or the largest number that is less than $t$, or the smallest number that is greater than $t$. It returns the index of one of these numbers.
 
-Second, we prove that $BS(i,j,t)$ correctly determines the minimum number that is greater than or equal target $t$ in a sorted array $A$. Similar to binary search, the algorithm also searchs for target $t$ in $A[i,j]$. If it can find $t$, then $t$ is also the number of interest. It it cannot find $t$, then it returns the minimum number that is greater than $t$. 
+\textit{Base case}: if the mid point is equal to $t$, it is obviously the number that we are searching for. If $l == r$, the array has only one number, which must fall in one of the cases listed above. Therefore the algorithm works correcly on the base case.
+
+\textit{Inductive Hypothesis}: assume that, for all $l,r$ such that $r - l < k$, $BS$ can correctly find one of the numbers of interest.
+
+\textit{Inductive Step}: we will prove that $BS$ will work on $r - l = k + 1$. Similar to binary search, if $m < t$, then we can rule out left half $L$ of the array because all elements of $L$ are less than the mid point. Then we only need to search for $t$ in $R$ by calling $BS(m+1,r,t)$, which, by the inductive hypothesis, will return the correct index because $r - (m + 1) < k$. The case where $m > t$ is analogous. Proof completes!
+
+\textit{Extra work to compute final solution}: for each $a_i$, $CSI$ counts the maximum significant inversions that $a_i$ can make up. Notice that $CSI$ does not count the elements that it already checks. The sum of all these counts is obviously the final solution.
 
 \textbf{Runing Time Analysis}
 
-We can use merge sort or quick sort to sort A in $O(nlogn)$. $BS$ takes $O(logn)$ to search. Because it is called $O(n)$ times, the entire algorithm will take $O(nlogn)$.
+We can use merge sort or quick sort to sort A in $O(nlogn)$ time. $BS$ takes $O(logn)$ to search each time. Because it is called $O(n)$ times, these calls take  $O(nlogn)$. Therefore, the runtime of the entire algorithm is $O(nlogn)$.
+
 %==============================================================================%
 \newpage
 \begin{problem}{3} 
