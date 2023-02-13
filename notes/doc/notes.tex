@@ -79,7 +79,7 @@
 
         \vspace{0.5cm}
  
-        \textbf{\Large Dynamic Programming Notes}
+        \textbf{\Large Notes}
  
         \vspace{1cm}
 
@@ -98,6 +98,41 @@
              
     \end{center}
 \end{titlepage}
+
+
+%==============================================================================%
+\section{Divide and Conquer}
+\subsection{Pattern}
+
+There are 3 strategies:
+
+A. Simply divide input to 2 equal parts, then recurse on each side and combine the solutions (merge sort, binary search).
+
+B. \textbf{Find a clever way} to reduce the number of subproblems so that we can bypass some of the subproblems. For example, in binary search, at each iteration, we only consider a half of the problem and circumvent the other half. This helps save lots of time.
+
+C. \textbf{Find something useful} for dividing the input. For example, quick sort relies on 
+
+%==============================================================================%
+\subsection{Proof Skeleton}
+
+
+
+%==============================================================================%
+\subsection{Common Recurrence}
+
+Merge sort: $$T(n) = 2T(n/2) + O(n) = O(nlogn)$$
+
+Integer Multiplication: 
+$$T(n) = 3T(\frac{n}{2}) + O(n) = O(n^{log_23}) = O(n^{1.59})$$
+
+Median Selection: 
+$$T(n) = T(\frac{n}{5}) + T(\frac{7n}{10}) + O(n) = T(\frac{9n}{10}) + O(n) = O(n)$$
+
+
+%==============================================================================%
+\newpage
+\section{Dynamic Programming}
+\subsection{Example Problems}
 
 %==============================================================================%
 \begin{problem}{1}
@@ -170,18 +205,21 @@ There are n iteration, each of which has constant number of operations, hence th
 
 %==============================================================================%
 \newpage
-\begin{problem}{2} 
+\section{Greedy Algorithms}
+\subsection{Greedy Stays Ahead}
+Let A be the algorithm's solution and O be the optimal solution. 
 
-\end{problem}
+1. Align A and O in some ways so that we can compare $a_i$ with $o_i$. \\
+2. Use proof by induction to prove that $a_i$ is better than or of the same quality as $o_i$. \\
+3. Use proof by contradiction and (2) to prove the algorithm will eventually lead to the optimal solution, starting off with assume that it won't and come to an contradiction.
 
-\textbf{Recursive Formulation}
+Refer to section 4.1 in \cite{kleinbergalgorithm} for more details.
+%==============================================================================%
+\newpage
+\subsection{An Exchange Argument}
 
-\textbf{Proof/Explanation}
-
-\textbf{Pseudocode}
-
-\textbf{Runing Time Analysis}
-
+%==============================================================================%
+\newpage
 \bibliographystyle{alpha}
 \bibliography{mybib}
 \end{document}
