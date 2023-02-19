@@ -52,8 +52,8 @@
 
 \pagestyle{fancyplain}
 \headheight 35pt
-\lhead{Practice Assignment \projnumber}
-\rhead{Jan. 19, 2023}
+\lhead{Class Notes}
+% \rhead{Jan. 19, 2023}
 \lfoot{}
 \cfoot{}
 \rfoot{\small\thepage}
@@ -217,6 +217,115 @@ Refer to section 4.1 in \cite{kleinbergalgorithm} for more details.
 %==============================================================================%
 \newpage
 \subsection{An Exchange Argument}
+
+%==============================================================================%
+\newpage
+\subsection{Matroids}
+Matching Matroid
+
+Disjoint Path Matroid: G = (V,E) + fixed vertex $S \subset V$
+
+\subsubsection{Cases where Matroids fail}
+
+Theorem X (\cite{JeffE19}, appendix E): For any family of subsets I that do not form a matroid, there exists a weight function for which greedy fails.
+
+Greedy fails on the \textbf{Set Cover Problem}: give a family I of subsets of S. Find that smallest subset of I that covers everything in S. 
+
+\subsubsection{Reference}
+16.4, \cite{CLRS}
+
+
+%==============================================================================%
+\newpage
+\section{Randomized Algorithms}
+
+\subsection{Definition}
+
+\subsection{Application}
+1. Using randomization to improve run time \\
+2. Guarantee the right solution but run time will be a random variable (Quicksort) \\
+3. Allowed to make mistakes with low probability \\
+4. Efficient testing (tesing sortedness)
+
+\subsection{Math}
+
+\subsubsection{Arithmetic Series}
+
+$$a_k = a_0 + nd$$
+
+$$\sum^{n}_{i=0}a_i = \frac{n(a_0 + a_n)}{2}$$
+
+\subsubsection{Geometric Series}
+The name geometric series indicates each term is the geometric mean of its two neighboring terms, similar to how the name arithmetic series indicates each term is the arithmetic mean of its two neighboring terms.
+
+$$a_k = a_0 r^k$$
+
+$$\sum^{n}_{i=0}a_i = 1 + r + r^2 + ... + r^n = \frac{1 - r^{n+1}}{1 - r}$$
+
+For $-1 < r < 1$, the sum converges as $a \rightarrow \infty$, 
+$$\sum^{\infty}_{i=0}a_i = \frac{1}{1 - r}$$
+
+\subsubsection{Arithmetico-geometric Series}
+
+An arithmetic-geometric progression (AGP) is a progression in which each term can be represented as the product of the terms of an arithmetic progressions (AP) and a geometric progressions (GP).
+$$\frac{1}{2} + \frac{2}{4} + \frac{3}{8} + \frac{5}{32} + ... = ?$$
+
+The sequence has the form
+$$a_n = (a + (n-1)d)r^{n-1}$$
+
+$$S_{\infty} = \sum^n_{k=1} kr^k = \frac{r}{(1-r)^2}$$
+
+\subsubsection{Harmonic number}
+Harnomic series has the form
+$$H(n) = \sum_{i=1}^{n} \frac{1}{i}$$
+
+According to \cite{kleinbergalgorithm}, harmonic number is bounded by $\Theta(logn)$
+$$ln(n + 1) < H(n) < 1 + ln(n)$$
+
+
+\subsection{Examples}
+
+\begin{problem}{Randomized algorithm for global min cut} 
+Input: undirected G=(V,E)\\
+Find a min sized subset $C \subset E$ such that $G = (V,E - C)$ is disconnected.
+\end{problem}
+
+\textbf{Edge Contraction Operation}: ???
+
+If you contract $E - C$, then your graph looks like 2 nodes with many edges connecting them, how???
+
+\begin{problem}{Sortedness Testing} 
+Given a array A of n items, create randomized an algorithm than can check if A has a 99\% chance to be sorted in O(logn) time
+\end{problem}
+
+To say with probability of 99\% if A is nearly sorted: ignoring an $\epsilon$ fraction of elements, rest are sorted.
+
+Idea 1: pick random indices i and j and compare $a_i$ an $a_j$.
+
+This won't work in case that A = 1,1,1,1,1,1,0,0,0,0,0,0. A is not nearly sorted.
+
+p(success) = k/n for k tests. For P(success) > 0.99, need O(n) tests.
+
+Idea 2: pick 2 random indices $i \leq j$ and say that A not sorted if $x_i > x_j$.
+
+This won't work in case A = [1,0,2,1,3,2,4,4,5], that has a subset of even-indexed numbers or a subset of odd-indexed numbers sorted. We will say A is sorted uness we pick i odd and j = i + 1.
+
+P(success) = low ???
+\\
+\\
+\textbf{Algorithm 2}: \\
+For k iterations: \\
+\tab[1cm] Pick 2 items from A \\
+\tab[1cm] If they are not in sorted order \\
+\tab[1cm]   output "not sorted" \\
+\tab[1cm] Else \\ 
+\tab[1cm]   continue \\ 
+
+Refer to "Testing if an Array is sorted".
+
+
+\subsubsection{Reference}
+Chapter 13, \cite{kleinbergalgorithm}
 
 %==============================================================================%
 \newpage
