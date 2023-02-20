@@ -108,7 +108,7 @@ Job Scheduling
 Let $T = \{t_1, t_2, ..., t_n\}$ be the time the jobs $j_1, j_2, ..., j_n$ take.
 
 \begin{algorithm}
-\caption{$A(T)$}\label{alg:q2}
+\caption{$A(T)$}\label{alg:q1}
 \begin{algorithmic}
     \State $sortedT \gets sort(T)$
     \State $lastJobCompleteTime \gets 0$
@@ -140,10 +140,34 @@ A wrong greedy algorithm for the Knapsack problem
 \end{problem}
 
 \textbf{(a)}
+First, we find the list of bricks $C$ that can be fit in the bags $c1, c2, ..., c_{i}$, then we iteratively take the heaviest brick in $C$ until the bag is full.
 
-\textbf{(b)}
+Assume that B is the list of bricks sorted by weights.
+\begin{algorithm}
+\caption{$A(B,n)$}\label{alg:q2}
+\begin{algorithmic}
+    \State $w \gets 0$
+    \While{$n > 0$}
+        \State Find the heaviest brick $b < n$
+        \State $w \gets w + b$
+        \State $n \gets n - b$
+    \EndWhile
 
-\textbf{(c)}
+    \Return $w$
+\end{algorithmic}
+\end{algorithm}
+
+\textbf{(b)} \\
+Observe that the brick weights are equivalent to binary representation $2^0,2^1,2^2,...$. Our algorithm is analogous to finding the binary representation of $n$. It starts with the most significant bit of n, then reduce n to, and repeat that process until n is reduced to 0. Because every number has a binary representation, the algorithm guarantees to fill up any given bag (completely full), hence produce the optimal solution.
+
+% Let $i = 1,2,..,n$ is the order in which the gold bricks are put in the bag.
+
+% Theorem 1: the maximum number of gold bricks g that the bag can carry is the number of the lightest gold bricks we can put in the bag.
+
+% Proof: Let $G$ be the list of the g-lighest bricks. Assume that there exists some optimal solution O that contains some bricks $b_i \notin G$. To be able to take $b_i$, O must have left out some bricks $b_j \in G$, otherwise, there would not be enough room for $b_i + G$ (by the assumption that G-lightest bricks fill up the bag). If we swap $b_i$ with $b_j$, we get a new bag with the same number of gold bricks but with less weight. By swapping out all of the large bricks, $b_i \notin G$, with some bricks, $b_j \in G$, we obtain the greedy algorithm's result. And each swap results in an at least equally good solution. Therefore, the greedy solution is optimal.
+
+\textbf{(c)} \\
+With gold bricks having weights $\{2,2,3,5\}$ and $n = 9$, the algorithm will not produce the optimal solution. In particular, the optimal solution is $\{2,2,5\}$, while the algorithm will yield $\{5,3\}$.
 
 %==============================================================================%
 \newpage
