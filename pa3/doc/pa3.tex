@@ -105,10 +105,33 @@ Job Scheduling
 \end{problem}
 
 \textbf{(a)}
+Let $T = \{t_1, t_2, ..., t_n\}$ be the time the jobs $j_1, j_2, ..., j_n$ take.
+
+\begin{algorithm}
+\caption{$A(T)$}\label{alg:q2}
+\begin{algorithmic}
+    \State $sortedT \gets sort(T)$
+    \State $lastJobCompleteTime \gets 0$
+    \State $totalTime \gets 0$
+    \For{t in T}
+        \State $totalTime \gets totalTime + lastJobCompleteTime + t$
+        \State $lastJobCompleteTime \gets lastJobCompleteTime + t$
+    \EndFor
+
+    \Return $sortT, totalTime$
+\end{algorithmic}
+\end{algorithm}
 
 \textbf{(b)}
+We have 
+$$\sum_{i=1}^{n} C_i = t_1 + (t_1 + t_2) + (t_1 + t_2 + t_3) + ... + t_n 
+= nt_1 + (n-1)t_2 + ... + (n+1-i)t_i + (n-i)t_{i+1} + ... + t_n$$
 
-\textbf{(c)}
+Theorem 1: The total cost is minimum when $t_i \leq t_{i+1}$ for all i \\
+Proof: assume that there exists some optimal job ordering that has $t_i > t_{i+1}$. Observe that there are (n + 1 - i) of $t_i$ terms and (n - i) of $t_{i+1}$ terms in the above summation. If we swap $t_i$ and $t_{i+1}$, the summation will have one more $t_{i+1}$ term and one less $t_i$ term. Because $t_i > t_{i+1}$, the total cost after the swap will reduce, thus producing a not worse solution. From some optimal solution O, we can swap these inversions ($t_{i} > t_{i+1}$) until there is no inversions left in the ordering, which is exactly the solution of our greedy algorithm. And each swap guarantees to produce at least equally good result.
+
+\textbf{(c)} \\
+The algorithm takes $O(nlogn)$ to sort the list of jobs by time needed to complete the job. It then takes $O(n)$ time to iterate through the sorted list and accumulate the total time. The ordering is the order of the sorted list. In total, it takes $O(nlogn)$ time.
 
 %==============================================================================%
 \newpage
