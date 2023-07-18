@@ -62,7 +62,10 @@
 \newenvironment{problem}[2][Problem]
     { \begin{mdframed}[backgroundcolor=gray!20] \textbf{#1 #2} \\}
     {  \end{mdframed}}
-   
+
+\newenvironment{theorem}[2][Theorem]
+    { \begin{mdframed}[backgroundcolor=blue!10] \textbf{#1 #2} \\}
+    {  \end{mdframed}}
 
 % Make Rightarrow with superscript
 % \makeatletter
@@ -207,16 +210,54 @@ There are n iteration, each of which has constant number of operations, hence th
 \newpage
 \section{Greedy Algorithms}
 \subsection{Greedy Stays Ahead}
-Let A be the algorithm's solution and O be the optimal solution. 
+Let A be the algorithm's solution and O be the optimal solution. The idea is to "Compare the partial solutions that the greedy algorithm constructs to initial segments of O, and show that the greedy algorithm is doing better in a step-by-step fashion", \cite{kleinbergalgorithm}.
 
+Steps: \\
 1. Align A and O in some ways so that we can compare $a_i$ with $o_i$. \\
 2. Use proof by induction to prove that $a_i$ is better than or of the same quality as $o_i$. \\
-3. Use proof by contradiction and (2) to prove the algorithm will eventually lead to the optimal solution, starting off with assume that it won't and come to an contradiction.
+3. Use proof by contradiction and (2) to prove the algorithm will eventually lead to the optimal solution, starting off with the assumption that it won't and come to an contradiction.
 
 Refer to section 4.1 in \cite{kleinbergalgorithm} for more details.
+
+\begin{problem}{Interval Scheduling Problem} 
+Input: a list of intervals I = \{(s,e)\} with s and e being start and end time respectively. Two intervals overlap when they occur at the same time, excluding start and end time. For example, (1,2) does not overlap (2,3). \\
+
+Problem: Find the maximum number of non-overlapping intervals in I.
+\end{problem}
+
+\textbf{Greedy Algorithm}\\
+1. Sort I by start time.\\
+2. Iterate through I, add the interval to the solution if it does not overlap with any intervals. If some intervals overlap, pick the one with the smallest end time.
+
+Let $A = a_1, ..., a_k$ be the solution constructed by the greedy algorithm and $O = o_1, ..., o_m$ be the optimal solution, both of which are sorted by end time. We will prove that $k >= m$.
+
+\textbf{Lemma 1}. $a_i.e < o_i.e$ for any $i \leq k$.\\
+\textbf{Proof.} We prove this by induction. For base case $i = 1$, the statement is clearly true because the algorithm picks that smallest end time.
+
+Induction hypothesis: $a_i.e < o_i.e$ for any $i > 1$.
+
+Induction step: $a_{i+1}.e < o_{i+1}.e$? This is always true because either $a_{i+1}.e$ or $o_{i+1}.e$ is compatible with $A$, therefore we can always pick $o_{i+1}$ if it has smaller end time. Proof completes!
+
+\textbf{Theorem}. The greedy algorithm returns an optimal set A.\\
+\textbf{Proof.} Assume that A is not optimal, followed by $m > k$. Since $m > k$, there must be some $o_{k+1}$ in O that starts after $o_{k}.e$, and hence after $a_{k}.e$ (Lemma 1). Therefor, $o_{k+1}$ is compatible with the current set A, and the algorithm would have picked it. This contradicts the assumption that A is not optimal. Proof completes!
+
+\begin{problem}{Minimum interval removals for non-overlapping} 
+Input: a list of intervals I = \{(s,e)\} with s and e being start and end time respectively. Two intervals overlap when they occur at the same time, excluding start and end time. For example, (1,2) does not overlap (2,3). \\
+
+Problem: Find the minimum number of intervals in I that need to be removed so that I is non-overlapping.
+\end{problem}
+
+\textbf{Greedy Algorithm}\\
+1. Sort I by end time.\\
+2. Iterate through I. If the interval overlaps with the previous interval, remove the one with later end time. Otherwise, keep it. \\
+
 %==============================================================================%
 \newpage
 \subsection{An Exchange Argument}
+Let A be the algorithm's solution and O be the optimal solution. Gradually modify O, \textbf{preserving its optimality} at each step, but eventually transforming it into A.
+
+1. Derive some useful properties from the greedy choice \\
+2. Assume that there exists an $O$ solution without these properties. Gradually tweak $O$ until it has these properties. Prove that each tweak results in another optimal solution.
 
 %==============================================================================%
 \newpage
@@ -273,7 +314,7 @@ $$\frac{1}{2} + \frac{2}{4} + \frac{3}{8} + \frac{5}{32} + ... = ?$$
 The sequence has the form
 $$a_n = (a + (n-1)d)r^{n-1}$$
 
-$$S_{\infty} = \sum^n_{k=1} kr^k = \frac{r}{(1-r)^2}$$
+$$S_{\infty} = \sum^{\infty}_{k=1} kr^k = \frac{r}{(1-r)^2}$$
 
 \subsubsection{Harmonic number}
 Harnomic series has the form
@@ -282,6 +323,20 @@ $$H(n) = \sum_{i=1}^{n} \frac{1}{i}$$
 According to \cite{kleinbergalgorithm}, harmonic number is bounded by $\Theta(logn)$
 $$ln(n + 1) < H(n) < 1 + ln(n)$$
 
+\subsubsection{Probability}
+
+\begin{theorem}{13.7}
+If we repeatedly perform independent trials of an experiment, each of
+which succeeds with probability $p > 0$, then the expected number of trials we
+need to perform until the first success is 1/p \cite{kleinbergalgorithm}.
+    
+\end{theorem}
+
+\begin{theorem}{13.8}
+Linearity of Expectation. Given two random variables X and Y defined
+over the same probability space, we can define X + Y to be the random variable
+equal to $X(\omega) + Y(\omega)$ on a sample point $\omega$. For any X and Y, we have $E [X + Y]= E [X]+ E [Y]$ \cite{kleinbergalgorithm}.
+\end{theorem}
 
 \subsection{Examples}
 
