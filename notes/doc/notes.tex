@@ -259,6 +259,35 @@ Let A be the algorithm's solution and O be the optimal solution. Gradually modif
 1. Derive some useful properties from the greedy choice \\
 2. Assume that there exists an $O$ solution without these properties. Gradually tweak $O$ until it has these properties. Prove that each tweak results in another optimal solution.
 
+\begin{problem}{Two City Scheduling} 
+A company is planning to interview 2n people. Given the array costs where $costs[i] = [aCosti, bCosti]$, the cost of flying the ith person to city a is aCosti, and the cost of flying the ith person to city b is bCosti.
+
+Return the minimum cost to fly every person to a city such that exactly n people arrive in each city.
+
+Input: costs = [[10,20],[30,200],[400,50],[30,20]]
+Output: 110
+Explanation: 
+The first person goes to city A for a cost of 10.
+The second person goes to city A for a cost of 30.
+The third person goes to city B for a cost of 50.
+The fourth person goes to city B for a cost of 20.
+
+The total minimum cost is 10 + 30 + 50 + 20 = 110 to have half the people interviewing in each city.
+
+Input: costs = [[259,770],[448,54],[926,667],[184,139],[840,118],[577,469]]
+Output: 1859
+
+\url{https://leetcode.com/problems/two-city-scheduling/description/}
+\end{problem}
+
+\textbf{Greedy Algorithm}: \\
+First, calculate the cost difference of sending each person to city b instead of a, then sort the diff array, and then choose the first n people to go to city b, and let the rest go to city a.
+
+\textbf{Proof by Exchange Argument}: \\
+Let $O = [O_a, O_b]$ be the optimal solution with $O_a$ and $O_b$ are the groups going to city a and b, respectively. Similarly, let $G = [G_a, G_b]$ be the greedy solution. For each person o in $O_b$, exchange it with the corresponding g in $G_b$. We will prove that the new solution is still optimal.
+
+There are two cases. First, if g is in $O_b$, then the new solution is the same as the old one. Second, if g is not in $O_b$, then the new solution is better than the old one because of the follows. First, $O = A + g_a + B + o_b$ and $G = A + o_a + B + g_b$. The difference between them is $O - G = (o_b - o_a) - (g_b - g_a) > 0$ because g is the first element in the sorted diff array, hence $G$ is cheaper than $O$. Proof completes!
+
 %==============================================================================%
 \newpage
 \subsection{Matroids}
